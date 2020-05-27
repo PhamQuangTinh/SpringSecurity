@@ -1,0 +1,10 @@
+eclipse.preferences.version=1
+encoding//src/main/java/com/phamquangtinh/config/JPAAuditingConfig.java=UTF-8
+encoding//src/main/java/com/phamquangtinh/config/JPAConfig.java=UTF-8
+encoding//src/main/java/com/phamquangtinh/dto/NewsDTO.java=UTF-8
+encoding//src/main/java/com/phamquangtinh/entity/Base.java=UTF-8
+encoding//src/main/java/com/phamquangtinh/entity/NewsEntity.java=UTF-8
+encoding//src/main/java/com/phamquangtinh/repository/NewsRepository.java=UTF-8
+encoding//src/main/java/com/phamquangtinh/repository/UserRepository.java=UTF-8
+encoding//src/main/java/com/phamquangtinh/security/CustomSuccessHandler.java=UTF-8
+encoding//src/main/java/com/phamquangtinh/service/impl/CustomUserDetailsService.java=UTF-8

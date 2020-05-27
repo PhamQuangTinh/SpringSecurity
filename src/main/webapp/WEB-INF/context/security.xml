@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+	xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+            http://www.springframework.org/schema/security
+            http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+	<!-- login-processing-url: nơi action url nhận username password từ form 
+		login -->
+	<!-- username-parameter: nơi nhận giá trị username của form login -->
+	<!-- password-parameter: nợi nhận gái trị pasword của form login -->
+	<!-- login-page="/dang-nhap": login co url la ~/dang-nhap -->
+	<!-- authentication-success-handler-ref:="customSuccessHandler" sau khi 
+		authotication thành công thì sẽ đến customSuccessHandler để thực hiện chức 
+		năng authorization, định tuyến đường dẫn url -->
+
+	<!-- authentication-failure-url="/dang-nhap?incorrectAccount": thực hiện 
+		authentication, tải lại trang login khi đăng nhập failed -->
+	<!-- ..invalid-session-url="/dang-nhap?sessionTimeout": set time out session, 
+		trả lại trang đăng nhập -->
+	<http auto-config="false" use-expressions="true"
+		disable-url-rewriting="true">
+		
+		<!-- Kiểm tra đăng nhập admin, chỉ tài khoản nào có role là "ADMIN" và đã đăng nhập vào tk admin mới được vào trang admin, Nếu
+		không có khai báo này, khi truy cập vào trang chủ admin sẽ bị lỗi NullpointerException  -->
+		<intercept-url pattern="/quan-tri/trang-chu" access="hasAnyRole('ADMIN')" />
+		
+		<!--Từ chối truy cập vào admin bởi tk admin,chuyển đến url ~/accessDenied -->
+		<access-denied-handler
+			error-page="/accessDenied" />
+		<form-login login-page="/dang-nhap"
+			username-parameter="j_username" password-parameter="j_password"
+			login-processing-url="/j_spring_security_check"
+			authentication-success-handler-ref="customSuccessHandler"
+			authentication-failure-url="/dang-nhap?incorrectAccount" />
+		<session-management
+			invalid-session-url="/dang-nhap?sessionTimeout" />
+		<logout delete-cookies="JSESSIONID" />
+	</http>
+
+
+	<!-- Sử dụng bảo mật, mã hóa mật khẩu bằng công nghệ MD5 -->
+	<authentication-manager>
+		<authentication-provider
+			user-service-ref="customUserDetailsService">
+			<password-encoder ref="bcryptEncoder" />
+		</authentication-provider>
+	</authentication-manager>
+
+
+	<!-- khai báo biến bcryptEncoder để sử dụng spring security -->
+	<beans:bean id="bcryptEncoder"
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+		
+		
+	<!-- đường dẫn đén file xử lý authentication(session,...) -->
+	<beans:bean id="customUserDetailsService"
+		class="com.phamquangtinh.service.impl.CustomUserDetailsService" />
+		
+	<!-- đường dẫn đến file xử lý phần authorization -->
+	<beans:bean id="customSuccessHandler"
+		class="com.phamquangtinh.security.CustomSuccessHandler" />
+
+
+
+</beans:beans>
